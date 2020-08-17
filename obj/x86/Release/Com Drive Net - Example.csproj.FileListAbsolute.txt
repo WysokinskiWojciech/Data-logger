@@ -1,0 +1,12 @@
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\bin\x86\Release\Com Drive Net - Example.exe
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\bin\x86\Release\Com Drive Net - Example.pdb
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\bin\x86\Release\Unitronics.ComDriver.dll
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com Drive Net - Example.csprojAssemblyReference.cache
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com_Drive_Net___Example.Form1.resources
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com_Drive_Net___Example.Properties.Resources.resources
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com Drive Net - Example.csproj.GenerateResource.cache
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com Drive Net - Example.csproj.CopyComplete
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com Drive Net - Example.exe
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com Drive Net - Example.pdb
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\bin\x86\Release\Com Drive Net - Example.exe.config
+C:\Users\Dell\Downloads\NET Driver 2015 - Q4\Code Examples\C#\Reading MIs using Serial Port - C# Example\Com Drive Net - Example\obj\x86\Release\Com_Drive_Net___Example.Form2.resources
