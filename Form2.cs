@@ -42,44 +42,14 @@ namespace Com_Drive_Net___Example
 
         private void Print_Data(object sender, ProgressChangedEventArgs e)
         {
-            Plot1.Series["Var1"].Points.Clear();
-            Plot1.Series["Var2"].Points.Clear();
-            Plot1.Series["Var3"].Points.Clear();
-            Plot1.Series["Var4"].Points.Clear();
-            Plot1.Series["Var5"].Points.Clear();
-            for (int i = 0; i < Form1.plotdata.Length; i++) { 
-        
-                if (Form1.plotdata[i] != Int32.MinValue) {
-                Plot1.Series["Var1"].Points.AddY(Form1.plotdata[i]);
-                }
-
-                if (Form1.plotdata2[i] != Int32.MinValue)
-                {
-                    Plot1.Series["Var2"].Points.AddY(Form1.plotdata2[i]);
-                }
-
-                if (Form1.plotdata3[i] != Int32.MinValue)
-                {
-                    Plot1.Series["Var3"].Points.AddY(Form1.plotdata3[i]);
-                }
-
-                if (Form1.plotdata4[i] !=Int32.MinValue)
-                {
-                    Plot1.Series["Var4"].Points.AddY(Form1.plotdata4[i]);
-                }
-
-                if (Form1.plotdata5[i] != Int32.MinValue)
-                {
-                    Plot1.Series["Var5"].Points.AddY(Form1.plotdata5[i]);
-                }
-
-            }
+           
         }
 
         private void Close_Click(object sender, EventArgs e)
         {
             state = false;
             _worker.CancelAsync();
+            this.Close();
         }
     }
     }

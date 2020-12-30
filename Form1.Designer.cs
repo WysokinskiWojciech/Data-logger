@@ -50,32 +50,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.CurrentTime = new System.Windows.Forms.TextBox();
+            this.AddVariable = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Plot = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.File_name = new System.Windows.Forms.TextBox();
             this.Delay_time = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.Stop_cont = new System.Windows.Forms.Button();
             this.Run_cont = new System.Windows.Forms.Button();
-            this.Var5 = new System.Windows.Forms.CheckBox();
-            this.txt4 = new System.Windows.Forms.TextBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.txtMI4 = new System.Windows.Forms.TextBox();
-            this.Var4 = new System.Windows.Forms.CheckBox();
-            this.txt3 = new System.Windows.Forms.TextBox();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.txtMI3 = new System.Windows.Forms.TextBox();
-            this.Var3 = new System.Windows.Forms.CheckBox();
-            this.txt2 = new System.Windows.Forms.TextBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.txtMI2 = new System.Windows.Forms.TextBox();
-            this.Var2 = new System.Windows.Forms.CheckBox();
-            this.txt1 = new System.Windows.Forms.TextBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.txtMI1 = new System.Windows.Forms.TextBox();
-            this.Var1 = new System.Windows.Forms.CheckBox();
-            this.txt0 = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.txtMI0 = new System.Windows.Forms.TextBox();
             this.Write = new System.Windows.Forms.Button();
             this.Read = new System.Windows.Forms.Button();
             this.Port = new System.Windows.Forms.ComboBox();
@@ -102,9 +87,11 @@
             this.label14 = new System.Windows.Forms.Label();
             this.Timout = new System.Windows.Forms.ComboBox();
             this.Retriesip = new System.Windows.Forms.ComboBox();
-            this.Plot = new System.Windows.Forms.Button();
+            this.PlotSize = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.plcInformation.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // Connect
@@ -318,6 +305,12 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label17);
+            this.groupBox1.Controls.Add(this.PlotSize);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Controls.Add(this.CurrentTime);
+            this.groupBox1.Controls.Add(this.AddVariable);
+            this.groupBox1.Controls.Add(this.dataGridView1);
             this.groupBox1.Controls.Add(this.Plot);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.File_name);
@@ -325,39 +318,70 @@
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.Stop_cont);
             this.groupBox1.Controls.Add(this.Run_cont);
-            this.groupBox1.Controls.Add(this.Var5);
-            this.groupBox1.Controls.Add(this.txt4);
-            this.groupBox1.Controls.Add(this.comboBox5);
-            this.groupBox1.Controls.Add(this.txtMI4);
-            this.groupBox1.Controls.Add(this.Var4);
-            this.groupBox1.Controls.Add(this.txt3);
-            this.groupBox1.Controls.Add(this.comboBox4);
-            this.groupBox1.Controls.Add(this.txtMI3);
-            this.groupBox1.Controls.Add(this.Var3);
-            this.groupBox1.Controls.Add(this.txt2);
-            this.groupBox1.Controls.Add(this.comboBox3);
-            this.groupBox1.Controls.Add(this.txtMI2);
-            this.groupBox1.Controls.Add(this.Var2);
-            this.groupBox1.Controls.Add(this.txt1);
-            this.groupBox1.Controls.Add(this.comboBox2);
-            this.groupBox1.Controls.Add(this.txtMI1);
-            this.groupBox1.Controls.Add(this.Var1);
-            this.groupBox1.Controls.Add(this.txt0);
-            this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Controls.Add(this.txtMI0);
             this.groupBox1.Controls.Add(this.Write);
             this.groupBox1.Controls.Add(this.Read);
             this.groupBox1.Location = new System.Drawing.Point(12, 276);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(797, 347);
+            this.groupBox1.Size = new System.Drawing.Size(797, 325);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label16.Location = new System.Drawing.Point(525, 88);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(85, 17);
+            this.label16.TabIndex = 71;
+            this.label16.Text = "Current time";
+            // 
+            // CurrentTime
+            // 
+            this.CurrentTime.Location = new System.Drawing.Point(627, 88);
+            this.CurrentTime.Name = "CurrentTime";
+            this.CurrentTime.Size = new System.Drawing.Size(84, 20);
+            this.CurrentTime.TabIndex = 70;
+            // 
+            // AddVariable
+            // 
+            this.AddVariable.Location = new System.Drawing.Point(0, 19);
+            this.AddVariable.Name = "AddVariable";
+            this.AddVariable.Size = new System.Drawing.Size(113, 40);
+            this.AddVariable.TabIndex = 69;
+            this.AddVariable.Text = "Add variable";
+            this.AddVariable.UseVisualStyleBackColor = true;
+            this.AddVariable.Click += new System.EventHandler(this.AddVariable_Click);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToOrderColumns = true;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(126, 18);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(383, 274);
+            this.dataGridView1.TabIndex = 68;
+            // 
+            // Plot
+            // 
+            this.Plot.Location = new System.Drawing.Point(0, 252);
+            this.Plot.Name = "Plot";
+            this.Plot.Size = new System.Drawing.Size(113, 40);
+            this.Plot.TabIndex = 67;
+            this.Plot.Text = "Plot";
+            this.Plot.UseVisualStyleBackColor = true;
+            this.Plot.Click += new System.EventHandler(this.Plot_Click);
             // 
             // label15
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label15.Location = new System.Drawing.Point(6, 313);
+            this.label15.Location = new System.Drawing.Point(525, 57);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(69, 17);
             this.label15.TabIndex = 66;
@@ -365,14 +389,14 @@
             // 
             // File_name
             // 
-            this.File_name.Location = new System.Drawing.Point(108, 310);
+            this.File_name.Location = new System.Drawing.Point(627, 54);
             this.File_name.Name = "File_name";
             this.File_name.Size = new System.Drawing.Size(84, 20);
             this.File_name.TabIndex = 65;
             // 
             // Delay_time
             // 
-            this.Delay_time.Location = new System.Drawing.Point(108, 275);
+            this.Delay_time.Location = new System.Drawing.Point(627, 19);
             this.Delay_time.Name = "Delay_time";
             this.Delay_time.Size = new System.Drawing.Size(84, 20);
             this.Delay_time.TabIndex = 64;
@@ -381,7 +405,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label13.Location = new System.Drawing.Point(6, 275);
+            this.label13.Location = new System.Drawing.Point(525, 19);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(96, 17);
             this.label13.TabIndex = 63;
@@ -389,9 +413,9 @@
             // 
             // Stop_cont
             // 
-            this.Stop_cont.Location = new System.Drawing.Point(233, 103);
+            this.Stop_cont.Location = new System.Drawing.Point(0, 206);
             this.Stop_cont.Name = "Stop_cont";
-            this.Stop_cont.Size = new System.Drawing.Size(113, 22);
+            this.Stop_cont.Size = new System.Drawing.Size(113, 40);
             this.Stop_cont.TabIndex = 62;
             this.Stop_cont.Text = "Stop cont.";
             this.Stop_cont.UseVisualStyleBackColor = true;
@@ -399,229 +423,19 @@
             // 
             // Run_cont
             // 
-            this.Run_cont.Location = new System.Drawing.Point(233, 75);
+            this.Run_cont.Location = new System.Drawing.Point(0, 160);
             this.Run_cont.Name = "Run_cont";
-            this.Run_cont.Size = new System.Drawing.Size(113, 22);
+            this.Run_cont.Size = new System.Drawing.Size(113, 40);
             this.Run_cont.TabIndex = 61;
             this.Run_cont.Text = "Run cont.";
             this.Run_cont.UseVisualStyleBackColor = true;
             this.Run_cont.Click += new System.EventHandler(this.Run_cont_Click);
             // 
-            // Var5
-            // 
-            this.Var5.AutoSize = true;
-            this.Var5.Location = new System.Drawing.Point(6, 214);
-            this.Var5.Name = "Var5";
-            this.Var5.Size = new System.Drawing.Size(48, 17);
-            this.Var5.TabIndex = 60;
-            this.Var5.Text = "Var5";
-            this.Var5.UseVisualStyleBackColor = true;
-            this.Var5.CheckedChanged += new System.EventHandler(this.Var5_CheckedChanged);
-            // 
-            // txt4
-            // 
-            this.txt4.Location = new System.Drawing.Point(71, 236);
-            this.txt4.Name = "txt4";
-            this.txt4.Size = new System.Drawing.Size(48, 20);
-            this.txt4.TabIndex = 59;
-            // 
-            // comboBox5
-            // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
-            "MI",
-            "MB",
-            "ML",
-            "MF",
-            "SI",
-            "SB",
-            "XB",
-            "XI"});
-            this.comboBox5.Location = new System.Drawing.Point(6, 235);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(59, 21);
-            this.comboBox5.TabIndex = 58;
-            // 
-            // txtMI4
-            // 
-            this.txtMI4.Location = new System.Drawing.Point(125, 236);
-            this.txtMI4.Name = "txtMI4";
-            this.txtMI4.Size = new System.Drawing.Size(89, 20);
-            this.txtMI4.TabIndex = 57;
-            // 
-            // Var4
-            // 
-            this.Var4.AutoSize = true;
-            this.Var4.Location = new System.Drawing.Point(6, 166);
-            this.Var4.Name = "Var4";
-            this.Var4.Size = new System.Drawing.Size(48, 17);
-            this.Var4.TabIndex = 56;
-            this.Var4.Text = "Var4";
-            this.Var4.UseVisualStyleBackColor = true;
-            this.Var4.CheckedChanged += new System.EventHandler(this.Var4_CheckedChanged);
-            // 
-            // txt3
-            // 
-            this.txt3.Location = new System.Drawing.Point(71, 188);
-            this.txt3.Name = "txt3";
-            this.txt3.Size = new System.Drawing.Size(48, 20);
-            this.txt3.TabIndex = 55;
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "MI",
-            "MB",
-            "ML",
-            "MF",
-            "SI",
-            "SB",
-            "XB",
-            "XI"});
-            this.comboBox4.Location = new System.Drawing.Point(6, 187);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(59, 21);
-            this.comboBox4.TabIndex = 54;
-            // 
-            // txtMI3
-            // 
-            this.txtMI3.Location = new System.Drawing.Point(125, 188);
-            this.txtMI3.Name = "txtMI3";
-            this.txtMI3.Size = new System.Drawing.Size(89, 20);
-            this.txtMI3.TabIndex = 53;
-            // 
-            // Var3
-            // 
-            this.Var3.AutoSize = true;
-            this.Var3.Location = new System.Drawing.Point(6, 115);
-            this.Var3.Name = "Var3";
-            this.Var3.Size = new System.Drawing.Size(48, 17);
-            this.Var3.TabIndex = 52;
-            this.Var3.Text = "Var3";
-            this.Var3.UseVisualStyleBackColor = true;
-            this.Var3.CheckedChanged += new System.EventHandler(this.Var3_CheckedChanged);
-            // 
-            // txt2
-            // 
-            this.txt2.Location = new System.Drawing.Point(71, 137);
-            this.txt2.Name = "txt2";
-            this.txt2.Size = new System.Drawing.Size(48, 20);
-            this.txt2.TabIndex = 51;
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
-            "MI",
-            "MB",
-            "ML",
-            "MF",
-            "SI",
-            "SB",
-            "XB",
-            "XI"});
-            this.comboBox3.Location = new System.Drawing.Point(6, 136);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(59, 21);
-            this.comboBox3.TabIndex = 50;
-            // 
-            // txtMI2
-            // 
-            this.txtMI2.Location = new System.Drawing.Point(125, 137);
-            this.txtMI2.Name = "txtMI2";
-            this.txtMI2.Size = new System.Drawing.Size(89, 20);
-            this.txtMI2.TabIndex = 49;
-            // 
-            // Var2
-            // 
-            this.Var2.AutoSize = true;
-            this.Var2.Location = new System.Drawing.Point(6, 67);
-            this.Var2.Name = "Var2";
-            this.Var2.Size = new System.Drawing.Size(48, 17);
-            this.Var2.TabIndex = 48;
-            this.Var2.Text = "Var2";
-            this.Var2.UseVisualStyleBackColor = true;
-            this.Var2.CheckedChanged += new System.EventHandler(this.Var2_CheckedChanged);
-            // 
-            // txt1
-            // 
-            this.txt1.Location = new System.Drawing.Point(71, 89);
-            this.txt1.Name = "txt1";
-            this.txt1.Size = new System.Drawing.Size(48, 20);
-            this.txt1.TabIndex = 47;
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "MI",
-            "MB",
-            "ML",
-            "MF",
-            "SI",
-            "SB",
-            "XB",
-            "XI"});
-            this.comboBox2.Location = new System.Drawing.Point(6, 88);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(59, 21);
-            this.comboBox2.TabIndex = 46;
-            // 
-            // txtMI1
-            // 
-            this.txtMI1.Location = new System.Drawing.Point(125, 89);
-            this.txtMI1.Name = "txtMI1";
-            this.txtMI1.Size = new System.Drawing.Size(89, 20);
-            this.txtMI1.TabIndex = 45;
-            // 
-            // Var1
-            // 
-            this.Var1.AutoSize = true;
-            this.Var1.Location = new System.Drawing.Point(6, 19);
-            this.Var1.Name = "Var1";
-            this.Var1.Size = new System.Drawing.Size(48, 17);
-            this.Var1.TabIndex = 44;
-            this.Var1.Text = "Var1";
-            this.Var1.UseVisualStyleBackColor = true;
-            this.Var1.CheckedChanged += new System.EventHandler(this.Var1_CheckedChanged);
-            // 
-            // txt0
-            // 
-            this.txt0.Location = new System.Drawing.Point(71, 41);
-            this.txt0.Name = "txt0";
-            this.txt0.Size = new System.Drawing.Size(48, 20);
-            this.txt0.TabIndex = 43;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "MI",
-            "MB",
-            "ML",
-            "MF",
-            "SI",
-            "SB",
-            "XB",
-            "XI"});
-            this.comboBox1.Location = new System.Drawing.Point(6, 40);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(59, 21);
-            this.comboBox1.TabIndex = 23;
-            // 
-            // txtMI0
-            // 
-            this.txtMI0.Location = new System.Drawing.Point(125, 41);
-            this.txtMI0.Name = "txtMI0";
-            this.txtMI0.Size = new System.Drawing.Size(89, 20);
-            this.txtMI0.TabIndex = 0;
-            // 
             // Write
             // 
-            this.Write.Location = new System.Drawing.Point(233, 47);
+            this.Write.Location = new System.Drawing.Point(0, 114);
             this.Write.Name = "Write";
-            this.Write.Size = new System.Drawing.Size(113, 22);
+            this.Write.Size = new System.Drawing.Size(113, 40);
             this.Write.TabIndex = 6;
             this.Write.Text = "Write Values";
             this.Write.UseVisualStyleBackColor = true;
@@ -629,9 +443,9 @@
             // 
             // Read
             // 
-            this.Read.Location = new System.Drawing.Point(233, 19);
+            this.Read.Location = new System.Drawing.Point(0, 68);
             this.Read.Name = "Read";
-            this.Read.Size = new System.Drawing.Size(113, 22);
+            this.Read.Size = new System.Drawing.Size(113, 40);
             this.Read.TabIndex = 5;
             this.Read.Text = "Read Values";
             this.Read.UseVisualStyleBackColor = true;
@@ -928,21 +742,28 @@
             this.Retriesip.Size = new System.Drawing.Size(110, 21);
             this.Retriesip.TabIndex = 43;
             // 
-            // Plot
+            // PlotSize
             // 
-            this.Plot.Location = new System.Drawing.Point(233, 131);
-            this.Plot.Name = "Plot";
-            this.Plot.Size = new System.Drawing.Size(113, 22);
-            this.Plot.TabIndex = 67;
-            this.Plot.Text = "Plot";
-            this.Plot.UseVisualStyleBackColor = true;
-            this.Plot.Click += new System.EventHandler(this.Plot_Click);
+            this.PlotSize.Location = new System.Drawing.Point(627, 125);
+            this.PlotSize.Name = "PlotSize";
+            this.PlotSize.Size = new System.Drawing.Size(84, 20);
+            this.PlotSize.TabIndex = 72;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label17.Location = new System.Drawing.Point(525, 126);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(61, 17);
+            this.label17.TabIndex = 73;
+            this.label17.Text = "Plot size";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(830, 657);
+            this.ClientSize = new System.Drawing.Size(830, 622);
             this.Controls.Add(this.timeoutip);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.Timout);
@@ -984,6 +805,7 @@
             this.plcInformation.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1013,7 +835,6 @@
         private System.Windows.Forms.Button Write;
         private System.Windows.Forms.Button Read;
         private System.Windows.Forms.TextBox txtModel;
-        private System.Windows.Forms.TextBox txtMI0;
         private System.Windows.Forms.TextBox txtPlcName;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox Port;
@@ -1040,25 +861,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox Timout;
         private System.Windows.Forms.ComboBox Retriesip;
-        private System.Windows.Forms.TextBox txt0;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.CheckBox Var1;
-        private System.Windows.Forms.CheckBox Var5;
-        private System.Windows.Forms.TextBox txt4;
-        private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.TextBox txtMI4;
-        private System.Windows.Forms.CheckBox Var4;
-        private System.Windows.Forms.TextBox txt3;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.TextBox txtMI3;
-        private System.Windows.Forms.CheckBox Var3;
-        private System.Windows.Forms.TextBox txt2;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.TextBox txtMI2;
-        private System.Windows.Forms.CheckBox Var2;
-        private System.Windows.Forms.TextBox txt1;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.TextBox txtMI1;
         private System.Windows.Forms.Button Run_cont;
         private System.Windows.Forms.Button Stop_cont;
         private System.Windows.Forms.TextBox Delay_time;
@@ -1066,6 +868,12 @@
         private System.Windows.Forms.TextBox File_name;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button Plot;
+        private System.Windows.Forms.Button AddVariable;
+        public System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox CurrentTime;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox PlotSize;
     }
 }
 

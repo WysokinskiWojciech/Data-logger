@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Unitronics.ComDriver;
 using Unitronics.ComDriver.Messages.DataRequest;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
 using System.IO;
+
 
 namespace Com_Drive_Net___Example
 
@@ -15,34 +16,20 @@ namespace Com_Drive_Net___Example
     {
         PLC plc;
         delegate void SetControlValueCallback(Control oControl, string propName, object propValue);
-        private BackgroundWorker _worker = null;// inicjalizacja obiektu do wielowątkowości
-        bool state = false;
-        String[] val = new string[5];
+        List<Task> task = new List<Task>();//lista zadań
+        CancellationTokenSource cancelSource;//anulowanie zadania
+        volatile int count = 0;
+        public static List<Stack<string>> queue = new List<Stack<string>>();
+        Stack<string> numbers = new Stack<string>();
 
-        public static int[] plotdata = new int[50];
-        public static int[] plotdata2 = new int[50];
-        public static int[] plotdata3 = new int[50];
-        public static int[] plotdata4 = new int[50];
-        public static int[] plotdata5 = new int[50];
-
-        string var1;
-        string var2;
-        string var3;
-        string var4;
-        string var5;
-
-        string var11;
-        string var21;
-        string var31;
-        string var41;
-        string var51;
-        
-        public static int delay;
-        string name = "";
         public Form1()
         {
             InitializeComponent();
 
+            dataGridView1.ColumnCount = 3;
+            dataGridView1.Columns[0].Name = "Type of variable";
+            dataGridView1.Columns[1].Name = "Address";
+            dataGridView1.Columns[2].Name = "Value";
 
             checkBox1.Checked = false;
             checkBox2.Checked = false;
@@ -58,23 +45,10 @@ namespace Com_Drive_Net___Example
             Retriesip.Enabled = false;
             Timout.Enabled = false;
 
-            txt0.Enabled = false;
-            txt1.Enabled = false;
-            txt2.Enabled = false;
-            txt3.Enabled = false;
-            txt4.Enabled = false;
-            txtMI0.Enabled = false;
-            txtMI1.Enabled = false;
-            txtMI2.Enabled = false;
-            txtMI3.Enabled = false;
-            txtMI4.Enabled = false;
-            comboBox1.Enabled = false;
-            comboBox2.Enabled = false;
-            comboBox3.Enabled = false;
-            comboBox4.Enabled = false;
-            comboBox5.Enabled = false;
+
             Delay_time.Text = "1000";
             File_name.Text = "Data.txt";
+            PlotSize.Text = "100";
             setButtonsEnableState(false);
         }
 
@@ -93,46 +67,64 @@ namespace Com_Drive_Net___Example
             Plot.Enabled = value;
 
         }
+        public async void Mod(CancellationToken cancellationToken)//obsługa trybu debug mode
+        {
+            while (!cancelSource.Token.IsCancellationRequested)//jeżeli nie anulowano zadania
+            {
+                Read_Data();
+                await (Task.Delay(Convert.ToInt32(Delay_time.Text)));
+
+            }
+        }
 
         private void Connect_Click(object sender, EventArgs e)
         {
 
             if (checkBox1.Checked == true)
             {
-
-                SerialPortNames port = (SerialPortNames)Enum.Parse(typeof(SerialPortNames), Port.Text, true);
-                BaudRate baud = (BaudRate)Enum.Parse(typeof(BaudRate), "BR" + Baud.Text, true);
-                Unitronics.ComDriver.DataBits DataBits = (Unitronics.ComDriver.DataBits)Enum.Parse(typeof(Unitronics.ComDriver.DataBits), "DB" + data.Text, true);
-                System.IO.Ports.Parity Parity = (System.IO.Ports.Parity)Enum.Parse(typeof(System.IO.Ports.Parity), par.Text, true);
-                System.IO.Ports.StopBits stopBits = (System.IO.Ports.StopBits)Enum.Parse(typeof(System.IO.Ports.StopBits), StopBits.Text, true);
-                Serial serial = new Serial(port, baud, Convert.ToInt16(Retries.Text), Convert.ToInt16(data.Text) * 1000, DataBits, Parity, stopBits);
-
                 try
                 {
-                    plc = PLCFactory.GetPLC(serial, 0);
-                    plc.EventAbortCompleted += new PLC.AbortCompletedDelegate(plc_EventAbortCompleted);
-                    setButtonsEnableState(true);
-                    PlcVersion version = plc.Version;
-                    txtModel.Text = version.OPLCModel;
-                    txtHW.Text = version.HWVersion;
-                    txtOS.Text = version.OSVersion;
-                    txtBoot.Text = version.Boot;
-                    txtBinLib.Text = version.BinLib;
-                    txtFactoryBoot.Text = version.FactoryBoot;
+
+                    SerialPortNames port = (SerialPortNames)Enum.Parse(typeof(SerialPortNames), Port.Text, true);
+                    BaudRate baud = (BaudRate)Enum.Parse(typeof(BaudRate), "BR" + Baud.Text, true);
+                    Unitronics.ComDriver.DataBits DataBits = (Unitronics.ComDriver.DataBits)Enum.Parse(typeof(Unitronics.ComDriver.DataBits), "DB" + data.Text, true);
+                    System.IO.Ports.Parity Parity = (System.IO.Ports.Parity)Enum.Parse(typeof(System.IO.Ports.Parity), par.Text, true);
+                    System.IO.Ports.StopBits stopBits = (System.IO.Ports.StopBits)Enum.Parse(typeof(System.IO.Ports.StopBits), StopBits.Text, true);
+                    Serial serial = new Serial(port, baud, Convert.ToInt16(Retries.Text), Convert.ToInt16(data.Text) * 1000, DataBits, Parity, stopBits);
+
                     try
                     {
-                        txtPlcName.Text = plc.PlcName;
+                        plc = PLCFactory.GetPLC(serial, 0);
+                        plc.EventAbortCompleted += new PLC.AbortCompletedDelegate(plc_EventAbortCompleted);
+                        setButtonsEnableState(true);
+                        PlcVersion version = plc.Version;
+                        txtModel.Text = version.OPLCModel;
+                        txtHW.Text = version.HWVersion;
+                        txtOS.Text = version.OSVersion;
+                        txtBoot.Text = version.Boot;
+                        txtBinLib.Text = version.BinLib;
+                        txtFactoryBoot.Text = version.FactoryBoot;
+                        try
+                        {
+                            txtPlcName.Text = plc.PlcName;
+                        }
+                        catch
+                        {
+                        }
                     }
                     catch
                     {
+                        setButtonsEnableState(false);
+                        serial.Disconnect();
+                        System.Windows.Forms.MessageBox.Show("Could not establish a connection to the PLC");
                     }
                 }
                 catch
                 {
                     setButtonsEnableState(false);
-                    serial.Disconnect();
                     System.Windows.Forms.MessageBox.Show("Could not establish a connection to the PLC");
                 }
+
             }
 
 
@@ -168,7 +160,8 @@ namespace Com_Drive_Net___Example
                 }
             }
 
-            if (checkBox1.Checked == false && checkBox2.Checked == false) {
+            if (checkBox1.Checked == false && checkBox2.Checked == false)
+            {
                 System.Windows.Forms.MessageBox.Show("Wybierz typ komunikacji !!!");
             }
 
@@ -249,308 +242,48 @@ namespace Com_Drive_Net___Example
         private void Read_Click(object sender, EventArgs e)
         {
 
-            if (Var1.Checked == true)
-            {
-
-                ReadWriteRequest[] rw = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox1.Text, true);
-
-                rw[0] = new ReadOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt0.Text)),
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw);
-
-                    object[] values = (object[])(rw[0].ResponseValues);
-
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != null)
-                        {
-                            txtMI0.Text = ((short)values[i]).ToString();
-                        }
-                    }
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
-            }
-
-            if (Var2.Checked == true)
-            {
-
-                ReadWriteRequest[] rw2 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox2.Text, true);
-
-                rw2[0] = new ReadOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt1.Text)),
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw2);
-
-                    object[] values = (object[])(rw2[0].ResponseValues);
-
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != null)
-                        {
-                            txtMI1.Text = ((short)values[i]).ToString();
-                        }
-                    }
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
-            }
-
-            if (Var3.Checked == true)
-            {
-
-                ReadWriteRequest[] rw3 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox3.Text, true);
-
-                rw3[0] = new ReadOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt2.Text)),
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw3);
-
-                    object[] values = (object[])(rw3[0].ResponseValues);
-
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != null)
-                        {
-                            txtMI2.Text = ((short)values[i]).ToString();
-                        }
-                    }
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
-            }
-
-            if (Var4.Checked == true)
-            {
-
-                ReadWriteRequest[] rw4 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox4.Text, true);
-
-                rw4[0] = new ReadOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt3.Text)),
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw4);
-
-                    object[] values = (object[])(rw4[0].ResponseValues);
-
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != null)
-                        {
-                            txtMI3.Text = ((short)values[i]).ToString();
-                        }
-                    }
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
-            }
-
-            if (Var5.Checked == true)
-            {
-
-                ReadWriteRequest[] rw5 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox5.Text, true);
-
-                rw5[0] = new ReadOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt4.Text)),
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw5);
-
-                    object[] values = (object[])(rw5[0].ResponseValues);
-
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] != null)
-                        {
-                            txtMI4.Text = ((short)values[i]).ToString();
-                        }
-                    }
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
-            }
-
+            Read_Data();
 
         }
+
+
 
         private void Write_Click(object sender, EventArgs e)
         {
-            if (Var1.Checked == true)
+            ReadWriteRequest[] rw1 = new ReadWriteRequest[dataGridView1.SelectedRows.Count];
+            int count = 0;
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)//wykonaj dla wszystkich wierszy w tabeli
             {
-
-                ReadWriteRequest[] rw1 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox1.Text, true);
-                object[] values = new object[1];
-                values[0] = (object)Convert.ToInt16(txtMI0.Text);
-                rw1[0] = new WriteOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt0.Text)),
-                    Values = values,
-                };
-
                 try
                 {
-                    plc.ReadWrite(ref rw1);
+                    OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), row.Cells[0].Value.ToString(), true);
+                    object[] values = new object[dataGridView1.SelectedRows.Count];
+                    values[count] = (object)Convert.ToInt32(row.Cells[2].Value.ToString());
+
+                    rw1[count] = new WriteOperands()
+                    {
+                        OperandType = OperandTyp,
+                        NumberOfOperands = 1,
+                        StartAddress = ((ushort)Convert.ToInt32(row.Cells[1].Value.ToString())),
+                        Values = values,
+                    };
+                    count++;
                 }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
+                catch { }
             }
 
-            if (Var2.Checked == true)
+            try
             {
-
-                ReadWriteRequest[] rw2 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox2.Text, true);
-                object[] values = new object[1];
-                values[0] = (object)Convert.ToInt16(txtMI1.Text);
-                rw2[0] = new WriteOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt1.Text)),
-                    Values = values,
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw2);
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
+                plc.ReadWrite(ref rw1);
             }
-
-            if (Var3.Checked == true)
+            catch
             {
-
-                ReadWriteRequest[] rw3 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox3.Text, true);
-                object[] values = new object[1];
-                values[0] = (object)Convert.ToInt16(txtMI2.Text);
-                rw3[0] = new WriteOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt2.Text)),
-                    Values = values,
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw3);
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
-            }
-
-            if (Var4.Checked == true)
-            {
-
-                ReadWriteRequest[] rw4 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox4.Text, true);
-                object[] values = new object[1];
-                values[0] = (object)Convert.ToInt16(txtMI3.Text);
-                rw4[0] = new WriteOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt3.Text)),
-                    Values = values,
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw4);
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
+                System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
             }
 
 
-            if (Var5.Checked == true)
-            {
 
-                ReadWriteRequest[] rw5 = new ReadWriteRequest[1];
-                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), comboBox1.Text, true);
-                object[] values = new object[1];
-                values[0] = (object)Convert.ToInt16(txtMI4.Text);
-                rw5[0] = new WriteOperands()
-                {
-                    OperandType = OperandTyp,
-                    NumberOfOperands = 1,
-                    StartAddress = ((ushort)Convert.ToInt32(txt0.Text)),
-                    Values = values,
-                };
-
-                try
-                {
-                    plc.ReadWrite(ref rw5);
-                }
-                catch
-                {
-                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                }
-            }
         }
-
-
-
-
-
-
 
         private void UpdateUI(MethodInvoker del)
         {
@@ -565,7 +298,8 @@ namespace Com_Drive_Net___Example
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked == true) {
+            if (checkBox1.Checked == true)
+            {
                 Port.Enabled = true;
                 Baud.Enabled = true;
                 Retries.Enabled = true;
@@ -614,380 +348,107 @@ namespace Com_Drive_Net___Example
 
         }
 
-        private void Var1_CheckedChanged(object sender, EventArgs e)
+
+
+
+        public void Run_cont_Click(object sender, EventArgs e)
         {
-            if (Var1.Checked == true)
+            foreach (DataGridViewRow row in dataGridView1.Rows)//wykonaj dla wszystkich wierszy w tabeli
             {
-                comboBox1.Enabled = true;
-                txt0.Enabled = true;
-                txtMI0.Enabled = true;
-
+                queue.Add(numbers);
             }
 
-            if (Var1.Checked == false)
-            {
-                comboBox1.Enabled = false;
-                txt0.Enabled = false;
-                txtMI0.Enabled = false;
-            }
+            count = 0;
+            cancelSource = new CancellationTokenSource();
+            Task t = Task.Run(() => Mod(cancelSource.Token));
+            task.Add(t);
 
-        }
+        } 
 
-        private void Var2_CheckedChanged(object sender, EventArgs e)
+        private void Read_Data()/// odczyt danych
         {
-            if (Var2.Checked == true)
+            ReadWriteRequest[] rw = new ReadWriteRequest[dataGridView1.RowCount];
+            string myvalue = "";
+            string time = DateTime.Now.ToString("HH:mm:ss:FFF");
+            string myvalue2 = time+";";
+            CurrentTime.Invoke((MethodInvoker)delegate
             {
-                comboBox2.Enabled = true;
-                txt1.Enabled = true;
-                txtMI1.Enabled = true;
-
-            }
-
-            if (Var2.Checked == false)
+                CurrentTime.Text = time;
+            });
+            foreach (DataGridViewRow row in dataGridView1.Rows)//wykonaj dla wszystkich wierszy w tabeli
             {
-                comboBox2.Enabled = false;
-                txt1.Enabled = false;
-                txtMI1.Enabled = false;
-            }
-        }
-
-        private void Var3_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Var3.Checked == true)
-            {
-                comboBox3.Enabled = true;
-                txt2.Enabled = true;
-                txtMI2.Enabled = true;
-
-            }
-
-            if (Var3.Checked == false)
-            {
-                comboBox3.Enabled = false;
-                txt2.Enabled = false;
-                txtMI2.Enabled = false;
-            }
-        }
-
-        private void Var4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Var4.Checked == true)
-            {
-                comboBox4.Enabled = true;
-                txt3.Enabled = true;
-                txtMI3.Enabled = true;
-
-            }
-
-            if (Var4.Checked == false)
-            {
-                comboBox4.Enabled = false;
-                txt3.Enabled = false;
-                txtMI3.Enabled = false;
-            }
-
-        }
-
-        private void Var5_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Var5.Checked == true)
-            {
-                comboBox5.Enabled = true;
-                txt4.Enabled = true;
-                txtMI4.Enabled = true;
-
-            }
-
-            if (Var5.Checked == false)
-            {
-                comboBox5.Enabled = false;
-                txt4.Enabled = false;
-                txtMI4.Enabled = false;
-            }
-        }
-
-        private void Run_cont_Click(object sender, EventArgs e)
-        {
-            _worker = new BackgroundWorker();// inicjalizacja wielowątkowości
-            _worker.WorkerSupportsCancellation = true;
-            _worker.WorkerReportsProgress = true;
-            _worker.DoWork += new DoWorkEventHandler(Read_Data);// odczyt danych  w pętli
-            _worker.ProgressChanged += new ProgressChangedEventHandler(Print_Data);//wyświetlanie danych w pętli po odczycie danych
-            state = true;
-            var1 = comboBox1.Text;
-            var2 = comboBox2.Text;
-            var3 = comboBox3.Text;
-            var4 = comboBox4.Text;
-            var5 = comboBox5.Text;
-
-            var11 = txt0.Text;
-            var21 = txt1.Text;
-            var31 = txt2.Text;
-            var41 = txt3.Text;
-            var51 = txt4.Text;
-
-            for (int i = 0; i < plotdata.Length; i++)
-            {
-                plotdata[i] = Int32.MinValue;
-                plotdata2[i] = Int32.MinValue;
-                plotdata3[i] = Int32.MinValue;
-                plotdata4[i] = Int32.MinValue;
-                plotdata5[i] = Int32.MinValue;
-            }
-
-            name = File_name.Text;
-            delay = Convert.ToInt16(Delay_time.Text);
-            _worker.RunWorkerAsync();  //uruchomienie wielowątkowości 
-
-
-        }
-
-        private void Read_Data(object sender, DoWorkEventArgs e)/// odczyt danych
-        {
-            int count = 0;
-            string header = "";
-            string data = "";
-            DateTime thisDay = DateTime.Today;
-            header = "Time;" + var1 + var11 + ";" + var2 + var21 + ";" + var3 + var31 + ";" + var4 + var41 + ";" + var5 + var51;
-            using (System.IO.StreamWriter file =
-                             new System.IO.StreamWriter(name, true))//zapis danych do pliku
-            {
-                file.WriteLine(header);
-            }
-            while (state == true)
-            {
-                if (count == 49) {
-                    for (int i = 0; i <plotdata.Length; i++)
-                    {
-                        plotdata[i] = Int32.MinValue;
-                        plotdata2[i] = Int32.MinValue;
-                        plotdata3[i] = Int32.MinValue;
-                        plotdata4[i] = Int32.MinValue;
-                        plotdata5[i] = Int32.MinValue;
-                    }
-                    count = 0;
-                }
-                data = "";
-                data += DateTime.Now.ToString("HH:mm:ss:FFF") + ";";
-                if (Var1.Checked == true)
+                OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), row.Cells[0].Value.ToString(), true);
+                rw[row.Index] = new ReadOperands()
                 {
-
-                    ReadWriteRequest[] rw = new ReadWriteRequest[1];
-                    OperandTypes OperandTyp1 = (OperandTypes)Enum.Parse(typeof(OperandTypes), var1, true);
-
-                    rw[0] = new ReadOperands()
+                    OperandType = OperandTyp,
+                    NumberOfOperands = 1,
+                    StartAddress = ((ushort)Convert.ToInt32(row.Cells[1].Value.ToString())),
+                };
+            }
+            try
+            {
+                plc.ReadWrite(ref rw);
+                if (count==0)
+                {
+                    myvalue = "Time;";
+                }
+                for (int i = 0; i < rw.Length; i++)
+                {
+                    object[] values = (object[])(rw[i].ResponseValues);
+                    if (count==0)
                     {
-                        OperandType = OperandTyp1,
-                        NumberOfOperands = 1,
-                        StartAddress = ((ushort)Convert.ToInt32(txt0.Text)),
-                    };
-
-                    try
+                        myvalue += dataGridView1.Rows[i].Cells[0].Value.ToString() + dataGridView1.Rows[i].Cells[1].Value.ToString() + ";";
+                    }
+                   
+                    for (int j = 0; j < values.Length; j++)
                     {
-                        plc.ReadWrite(ref rw);
-
-                        object[] values = (object[])(rw[0].ResponseValues);
-
-                        for (int i = 0; i < values.Length; i++)
+                        if (values[j] != null)
                         {
-                            if (values[i] != null)
-                            {
-                                val[0] = ((short)values[i]).ToString();
-                                data += val[0] + ";";
-                                plotdata[count]=Convert.ToInt32(((short)values[i]));
-                            }
+
+                            dataGridView1.Rows[i].Cells[2].Value = values[j].ToString();
+                            myvalue2 += values[j].ToString()+";";
+                            
                         }
                     }
-                    catch
-                    {
-                        System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                    }
                 }
-
-                if (Var2.Checked == true)
+                if (count==0)
                 {
-
-                    ReadWriteRequest[] rw2 = new ReadWriteRequest[1];
-                    OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), var2, true);
-
-                    rw2[0] = new ReadOperands()
-                    {
-                        OperandType = OperandTyp,
-                        NumberOfOperands = 1,
-                        StartAddress = ((ushort)Convert.ToInt32(txt1.Text)),
-                    };
-
-                    try
-                    {
-                        plc.ReadWrite(ref rw2);
-
-                        object[] values = (object[])(rw2[0].ResponseValues);
-
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (values[i] != null)
-                            {
-                                val[1] = ((short)values[i]).ToString();
-                                data += val[1] + ";";
-                                plotdata2[count] = Convert.ToInt32(((short)values[i]));
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                    }
+                    myvalue += "\n";
                 }
-
-                if (Var3.Checked == true)
-                {
-
-                    ReadWriteRequest[] rw3 = new ReadWriteRequest[1];
-                    OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), var3, true);
-
-                    rw3[0] = new ReadOperands()
-                    {
-                        OperandType = OperandTyp,
-                        NumberOfOperands = 1,
-                        StartAddress = ((ushort)Convert.ToInt32(txt2.Text)),
-                    };
-
-                    try
-                    {
-                        plc.ReadWrite(ref rw3);
-
-                        object[] values = (object[])(rw3[0].ResponseValues);
-
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (values[i] != null)
-                            {
-                                val[2] = ((short)values[i]).ToString();
-                                data += val[2] + ";";
-                                plotdata3[count] = Convert.ToInt32(((short)values[i]));
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                    }
-                }
-
-                if (Var4.Checked == true)
-                {
-
-                    ReadWriteRequest[] rw4 = new ReadWriteRequest[1];
-                    OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), var4, true);
-
-                    rw4[0] = new ReadOperands()
-                    {
-                        OperandType = OperandTyp,
-                        NumberOfOperands = 1,
-                        StartAddress = ((ushort)Convert.ToInt32(txt3.Text)),
-                    };
-
-                    try
-                    {
-                        plc.ReadWrite(ref rw4);
-
-                        object[] values = (object[])(rw4[0].ResponseValues);
-
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (values[i] != null)
-                            {
-                                val[3] = ((short)values[i]).ToString();
-                                data += val[3] + ";";
-                                plotdata4[count] = Convert.ToInt32(((short)values[i]));
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                    }
-                }
-
-                if (Var5.Checked == true)
-                {
-
-                    ReadWriteRequest[] rw5 = new ReadWriteRequest[1];
-                    OperandTypes OperandTyp = (OperandTypes)Enum.Parse(typeof(OperandTypes), var5, true);
-
-                    rw5[0] = new ReadOperands()
-                    {
-                        OperandType = OperandTyp,
-                        NumberOfOperands = 1,
-                        StartAddress = ((ushort)Convert.ToInt32(txt4.Text)),
-                    };
-
-                    try
-                    {
-                        plc.ReadWrite(ref rw5);
-
-                        object[] values = (object[])(rw5[0].ResponseValues);
-
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (values[i] != null)
-                            {
-                                val[4] = ((short)values[i]).ToString();
-                                data += val[4] + ";";
-                                plotdata5[count] = Convert.ToInt32(((short)values[i]));
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-                    }
-                }
-
                 using (System.IO.StreamWriter file =
-                            new System.IO.StreamWriter(name, true))//zapis danych do pliku
+                                           new System.IO.StreamWriter(File_name.Text, true))//zapis danych do pliku
                 {
-                    file.WriteLine(data);
+                    file.WriteLine(myvalue+myvalue2);
+                    count++;   
                 }
-                count = count + 1;
-                _worker.ReportProgress(1);
-                System.Threading.Thread.Sleep(delay);
-            }
 
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
+            }
         }
 
         private void Stop_cont_Click_1(object sender, EventArgs e)
         {
-            _worker.CancelAsync();
-            state = false;
-            for (int i = 0; i < plotdata.Length; i++)
-            {
-                plotdata[i] = Int32.MinValue;
-                plotdata2[i] = Int32.MinValue;
-                plotdata3[i] = Int32.MinValue;
-                plotdata4[i] = Int32.MinValue;
-                plotdata5[i] = Int32.MinValue;
-            }
-
+            cancelSource.Cancel();
+            task.Clear();
 
         }
 
-        private void Print_Data(object sender, ProgressChangedEventArgs e)
-        { // wyświetlanie danych na wyświetlaczach
 
-            for (int i = 0; i < val.Length; i++)/// wyświetlanie temperatur na wyświetlaczu
-            {
-                TextBox txtbox1 = this.groupBox1.Controls["txtMI" + i.ToString()] as TextBox;
-                txtbox1.Text = val[i];
-            }
-
-
-        }
 
         public void Plot_Click(object sender, EventArgs e)
         {
             var Form2 = new Form2();
             Form2.Show();
-        } 
+        }
+
+        private void AddVariable_Click(object sender, EventArgs e)
+        {
+            var Form3 = new Form3(this);
+            Form3.Show();
+
+        }
     }
 }
