@@ -87,8 +87,6 @@
             this.label14 = new System.Windows.Forms.Label();
             this.Timout = new System.Windows.Forms.ComboBox();
             this.Retriesip = new System.Windows.Forms.ComboBox();
-            this.PlotSize = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.plcInformation.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -305,8 +303,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label17);
-            this.groupBox1.Controls.Add(this.PlotSize);
             this.groupBox1.Controls.Add(this.label16);
             this.groupBox1.Controls.Add(this.CurrentTime);
             this.groupBox1.Controls.Add(this.AddVariable);
@@ -742,23 +738,6 @@
             this.Retriesip.Size = new System.Drawing.Size(110, 21);
             this.Retriesip.TabIndex = 43;
             // 
-            // PlotSize
-            // 
-            this.PlotSize.Location = new System.Drawing.Point(627, 125);
-            this.PlotSize.Name = "PlotSize";
-            this.PlotSize.Size = new System.Drawing.Size(84, 20);
-            this.PlotSize.TabIndex = 72;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label17.Location = new System.Drawing.Point(525, 126);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(61, 17);
-            this.label17.TabIndex = 73;
-            this.label17.Text = "Plot size";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -872,8 +851,6 @@
         public System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox CurrentTime;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox PlotSize;
     }
 }
 

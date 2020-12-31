@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com Drive Net - Example", "Com Drive Net - Example.csproj", "{7E4C357E-C8DA-4331-A149-49A889CFF52A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Debug|x86.ActiveCfg = Debug|x86
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Debug|x86.Build.0 = Debug|x86
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Release|x86.ActiveCfg = Release|x86
+		{7E4C357E-C8DA-4331-A149-49A889CFF52A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {733A9623-F298-4B5C-8D47-05AB36C25DF7}
+	EndGlobalSection
+EndGlobal

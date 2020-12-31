@@ -19,9 +19,8 @@ namespace Com_Drive_Net___Example
         List<Task> task = new List<Task>();//lista zadań
         CancellationTokenSource cancelSource;//anulowanie zadania
         volatile int count = 0;
-        public static List<Stack<string>> queue = new List<Stack<string>>();
-        Stack<string> numbers = new Stack<string>();
-
+        public static Queue<List<string>> plot = new Queue<List<string>>();
+        public static List<string> list = new List<string>();
         public Form1()
         {
             InitializeComponent();
@@ -44,11 +43,10 @@ namespace Com_Drive_Net___Example
             Ipip.Enabled = false;
             Retriesip.Enabled = false;
             Timout.Enabled = false;
-
+            Plot.Enabled = false;
 
             Delay_time.Text = "1000";
             File_name.Text = "Data.txt";
-            PlotSize.Text = "100";
             setButtonsEnableState(false);
         }
 
@@ -64,7 +62,6 @@ namespace Com_Drive_Net___Example
             Write.Enabled = value;
             Run_cont.Enabled = value;
             Stop_cont.Enabled = value;
-            Plot.Enabled = value;
 
         }
         public async void Mod(CancellationToken cancellationToken)//obsługa trybu debug mode
@@ -353,16 +350,13 @@ namespace Com_Drive_Net___Example
 
         public void Run_cont_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow row in dataGridView1.Rows)//wykonaj dla wszystkich wierszy w tabeli
-            {
-                queue.Add(numbers);
-            }
-
+           
+            AddVariable.Enabled = false;
             count = 0;
             cancelSource = new CancellationTokenSource();
             Task t = Task.Run(() => Mod(cancelSource.Token));
             task.Add(t);
-
+            Plot.Enabled = true;
         } 
 
         private void Read_Data()/// odczyt danych
@@ -392,8 +386,10 @@ namespace Com_Drive_Net___Example
                 {
                     myvalue = "Time;";
                 }
+                list.Clear();
                 for (int i = 0; i < rw.Length; i++)
                 {
+                    List<string> list1 = new List<string>();
                     object[] values = (object[])(rw[i].ResponseValues);
                     if (count==0)
                     {
@@ -407,10 +403,13 @@ namespace Com_Drive_Net___Example
 
                             dataGridView1.Rows[i].Cells[2].Value = values[j].ToString();
                             myvalue2 += values[j].ToString()+";";
-                            
+                            list.Add(values[j].ToString());
                         }
                     }
+                
+
                 }
+                plot.Enqueue(list);
                 if (count==0)
                 {
                     myvalue += "\n";
@@ -433,7 +432,8 @@ namespace Com_Drive_Net___Example
         {
             cancelSource.Cancel();
             task.Clear();
-
+            AddVariable.Enabled = true;
+            Plot.Enabled = false;
         }
 
 

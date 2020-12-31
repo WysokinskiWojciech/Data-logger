@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System;
 using System.Diagnostics;
 using System.Threading;
 
@@ -34,15 +33,31 @@ namespace Com_Drive_Net___Example
         {
             while (state)
             {
-                
                 _worker.ReportProgress(1);
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(1);
             }
         }
 
         private void Print_Data(object sender, ProgressChangedEventArgs e)
         {
-           
+
+            for (int j = 0; j < Form1.plot.Count; j++)
+            {
+                try
+                {
+
+                    var point = (Form1.plot.Dequeue());
+                    foreach (System.Windows.Forms.DataVisualization.Charting.Series s1 in this.Plot1.Series)
+                    {
+                        s1.Points.AddY(Convert.ToDecimal(point[Convert.ToInt32(s1.Tag.ToString())]));
+                    }
+
+                }
+                catch { }
+
+            }
+
+            this.Plot1.Invalidate();
         }
 
         private void Close_Click(object sender, EventArgs e)
@@ -51,6 +66,28 @@ namespace Com_Drive_Net___Example
             _worker.CancelAsync();
             this.Close();
         }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            Random r = new Random();
+            for (int i = 0; i < Form1.list.Count; i++)
+            {
+                r.Next(0, 256);
+                var series1 = new System.Windows.Forms.DataVisualization.Charting.Series
+                {
+                    Name = "Series" + i.ToString(),
+                    Color = System.Drawing.Color.FromArgb(r.Next(0, 256), r.Next(0, 256), r.Next(0, 256)),
+                    IsVisibleInLegend = true,
+                    IsXValueIndexed = false,
+                    ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line,
+                    Tag = i.ToString(),
+
+                };
+
+                this.Plot1.Series.Add(series1);
+                this.Plot1.ChartAreas[0].AxisX.IsMarginVisible = false;
+            }
+        }
     }
-    }
+}
 
