@@ -450,27 +450,6 @@
             // Port
             // 
             this.Port.FormattingEnabled = true;
-            this.Port.Items.AddRange(new object[] {
-            "COM1",
-            "COM2",
-            "COM3",
-            "COM4",
-            "COM5",
-            "COM6",
-            "COM7",
-            "COM8",
-            "COM9",
-            "COM10",
-            "COM11",
-            "COM12",
-            "COM13",
-            "COM14",
-            "COM15",
-            "COM16",
-            "COM17",
-            "COM18",
-            "COM19",
-            "COM20"});
             this.Port.Location = new System.Drawing.Point(219, 37);
             this.Port.Name = "Port";
             this.Port.Size = new System.Drawing.Size(110, 21);

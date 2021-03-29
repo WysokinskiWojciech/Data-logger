@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
 using System.IO;
+using System.IO.Ports;
 
 
 namespace Com_Drive_Net___Example
@@ -48,6 +49,12 @@ namespace Com_Drive_Net___Example
             Delay_time.Text = "1000";
             File_name.Text = "Data.txt";
             setButtonsEnableState(false);
+
+            string[] ports = SerialPort.GetPortNames();
+            foreach (string port in ports)
+            {
+                Port.Items.Add(port);
+            }
         }
 
         private void setButtonsEnableState(bool value)
@@ -440,7 +447,7 @@ namespace Com_Drive_Net___Example
 
         public void Plot_Click(object sender, EventArgs e)
         {
-            var Form2 = new Form2();
+            var Form2 = new Form2(this);
             Form2.Show();
         }
 

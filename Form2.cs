@@ -12,12 +12,13 @@ using System.Threading;
 
 namespace Com_Drive_Net___Example
 {
+
     public partial class Form2 : Form
     {
-
+        private Form1 form1;
         bool state = false;
         private BackgroundWorker _worker = null;// inicjalizacja obiektu do wielowątkowości
-        public Form2()
+        public Form2(Form1 form1)
         {
             InitializeComponent();
             _worker = new BackgroundWorker();// inicjalizacja wielowątkowości
@@ -27,6 +28,7 @@ namespace Com_Drive_Net___Example
             _worker.ProgressChanged += new ProgressChangedEventHandler(Print_Data);//wyświetlanie danych w pętli po odczycie danych
             _worker.RunWorkerAsync();
             state = true;
+            this.form1 = form1;
         }
 
         private void UpdateChart(object sender, DoWorkEventArgs e)
@@ -57,7 +59,7 @@ namespace Com_Drive_Net___Example
 
             }
 
-            this.Plot1.Invalidate();
+            ///this.Plot1.Invalidate();
         }
 
         private void Close_Click(object sender, EventArgs e)
@@ -75,7 +77,7 @@ namespace Com_Drive_Net___Example
                 r.Next(0, 256);
                 var series1 = new System.Windows.Forms.DataVisualization.Charting.Series
                 {
-                    Name = "Series" + i.ToString(),
+                    Name =form1.dataGridView1.Rows[i].Cells[0].Value.ToString()+ form1.dataGridView1.Rows[i].Cells[1].Value.ToString(),
                     Color = System.Drawing.Color.FromArgb(r.Next(0, 256), r.Next(0, 256), r.Next(0, 256)),
                     IsVisibleInLegend = true,
                     IsXValueIndexed = false,
@@ -87,6 +89,12 @@ namespace Com_Drive_Net___Example
                 this.Plot1.Series.Add(series1);
                 this.Plot1.ChartAreas[0].AxisX.IsMarginVisible = false;
             }
+        }
+
+        private void Form2_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            state = false;
+            _worker.CancelAsync();
         }
     }
 }

@@ -24,3 +24,17 @@ C:\Users\Dell\Documents\PLC\Data logger\obj\x86\Debug\Com Drive Net - Example.cs
 C:\Users\Dell\Documents\PLC\Data logger\obj\x86\Debug\Com Drive Net - Example.exe
 C:\Users\Dell\Documents\PLC\Data logger\obj\x86\Debug\Com Drive Net - Example.pdb
 C:\Users\Dell\Documents\PLC\Data logger\obj\x86\Debug\Com_Drive_Net___Example.Form3.resources
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\bin\x86\Debug\Com Drive Net - Example.exe.config
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\bin\x86\Debug\Com Drive Net - Example.exe
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\bin\x86\Debug\Com Drive Net - Example.pdb
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\bin\x86\Debug\Unitronics.ComDriver.dll
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com Drive Net - Example.csprojAssemblyReference.cache
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com_Drive_Net___Example.Form1.resources
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com_Drive_Net___Example.Form2.resources
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com_Drive_Net___Example.Form3.resources
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com_Drive_Net___Example.Properties.Resources.resources
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com Drive Net - Example.csproj.GenerateResource.cache
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com Drive Net - Example.csproj.CoreCompileInputs.cache
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com Drive Net - Example.csproj.CopyComplete
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com Drive Net - Example.exe
+C:\Users\Dell\Documents\PLC\Data logger\Data-_logger\obj\x86\Debug\Com Drive Net - Example.pdb
