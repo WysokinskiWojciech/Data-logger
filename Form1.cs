@@ -45,6 +45,10 @@ namespace Com_Drive_Net___Example
             Retriesip.Enabled = false;
             Timout.Enabled = false;
             Plot.Enabled = false;
+            Read.Enabled = false;
+            Write.Enabled = false;
+            Run_cont.Enabled = false;
+            Stop_cont.Enabled = false;
 
             Delay_time.Text = "1000";
             File_name.Text = "Data.txt";
@@ -65,10 +69,6 @@ namespace Com_Drive_Net___Example
             Stop.Enabled = value;
             Run.Enabled = value;
             Disconnect.Enabled = value;
-            Read.Enabled = value;
-            Write.Enabled = value;
-            Run_cont.Enabled = value;
-            Stop_cont.Enabled = value;
 
         }
         public async void Mod(CancellationToken cancellationToken)//obsługa trybu debug mode
@@ -108,6 +108,12 @@ namespace Com_Drive_Net___Example
                         txtBoot.Text = version.Boot;
                         txtBinLib.Text = version.BinLib;
                         txtFactoryBoot.Text = version.FactoryBoot;
+                        if (dataGridView1.Rows.Count > 0) 
+                        {
+                            Read.Enabled = true;
+                            Run_cont.Enabled = true;
+                            Stop_cont.Enabled = true;
+                        }
                         try
                         {
                             txtPlcName.Text = plc.PlcName;
@@ -148,6 +154,12 @@ namespace Com_Drive_Net___Example
                     txtBoot.Text = version.Boot;
                     txtBinLib.Text = version.BinLib;
                     txtFactoryBoot.Text = version.FactoryBoot;
+                    if (dataGridView1.Rows.Count > 0)
+                    {
+                        Read.Enabled = true;
+                        Run_cont.Enabled = true;
+                        Stop_cont.Enabled = true;
+                    }
                     try
                     {
                         txtPlcName.Text = plc.PlcName;
@@ -357,21 +369,21 @@ namespace Com_Drive_Net___Example
 
         public void Run_cont_Click(object sender, EventArgs e)
         {
-           
+
             AddVariable.Enabled = false;
             count = 0;
             cancelSource = new CancellationTokenSource();
             Task t = Task.Run(() => Mod(cancelSource.Token));
             task.Add(t);
             Plot.Enabled = true;
-        } 
+        }
 
         private void Read_Data()/// odczyt danych
         {
             ReadWriteRequest[] rw = new ReadWriteRequest[dataGridView1.RowCount];
             string myvalue = "";
             string time = DateTime.Now.ToString("HH:mm:ss:FFF");
-            string myvalue2 = time+";";
+            string myvalue2 = time + ";";
             CurrentTime.Invoke((MethodInvoker)delegate
             {
                 CurrentTime.Text = time;
@@ -386,53 +398,54 @@ namespace Com_Drive_Net___Example
                     StartAddress = ((ushort)Convert.ToInt32(row.Cells[1].Value.ToString())),
                 };
             }
-            try
-            {
-                plc.ReadWrite(ref rw);
-                if (count==0)
+                try
                 {
-                    myvalue = "Time;";
-                }
-                list.Clear();
-                for (int i = 0; i < rw.Length; i++)
-                {
-                    List<string> list1 = new List<string>();
-                    object[] values = (object[])(rw[i].ResponseValues);
-                    if (count==0)
+                    plc.ReadWrite(ref rw);
+                    if (count == 0)
                     {
-                        myvalue += dataGridView1.Rows[i].Cells[0].Value.ToString() + dataGridView1.Rows[i].Cells[1].Value.ToString() + ";";
+                        myvalue = "Time;";
                     }
-                   
-                    for (int j = 0; j < values.Length; j++)
+                    list.Clear();
+                    for (int i = 0; i < rw.Length; i++)
                     {
-                        if (values[j] != null)
+                        List<string> list1 = new List<string>();
+                        object[] values = (object[])(rw[i].ResponseValues);
+                        if (count == 0)
                         {
-
-                            dataGridView1.Rows[i].Cells[2].Value = values[j].ToString();
-                            myvalue2 += values[j].ToString()+";";
-                            list.Add(values[j].ToString());
+                            myvalue += dataGridView1.Rows[i].Cells[0].Value.ToString() + dataGridView1.Rows[i].Cells[1].Value.ToString() + ";";
                         }
+
+                        for (int j = 0; j < values.Length; j++)
+                        {
+                            if (values[j] != null)
+                            {
+
+                                dataGridView1.Rows[i].Cells[2].Value = values[j].ToString();
+                                myvalue2 += values[j].ToString() + ";";
+                                list.Add(values[j].ToString());
+                            }
+                        }
+
+
                     }
-                
+                    plot.Enqueue(list);
+                    if (count == 0)
+                    {
+                        myvalue += "\n";
+                    }
+                    using (System.IO.StreamWriter file =
+                                               new System.IO.StreamWriter(File_name.Text, true))//zapis danych do pliku
+                    {
+                        file.WriteLine(myvalue + myvalue2);
+                        count++;
+                    }
 
                 }
-                plot.Enqueue(list);
-                if (count==0)
+                catch
                 {
-                    myvalue += "\n";
+                    System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
                 }
-                using (System.IO.StreamWriter file =
-                                           new System.IO.StreamWriter(File_name.Text, true))//zapis danych do pliku
-                {
-                    file.WriteLine(myvalue+myvalue2);
-                    count++;   
-                }
-
-            }
-            catch
-            {
-                System.Windows.Forms.MessageBox.Show("Could not communicate with the PLC");
-            }
+            
         }
 
         private void Stop_cont_Click_1(object sender, EventArgs e)
@@ -455,6 +468,68 @@ namespace Com_Drive_Net___Example
         {
             var Form3 = new Form3(this);
             Form3.Show();
+
+        }
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            if (Disconnect.Enabled == true)
+            {
+                if (dataGridView1.Rows.Count != 0)
+                {
+                    Read.Enabled = true;
+                    Run_cont.Enabled = true;
+                    Stop_cont.Enabled = true;
+                }
+                else
+                {
+                    Read.Enabled = false;
+                    Write.Enabled = false;
+                    Run_cont.Enabled = false;
+                    Stop_cont.Enabled = false;
+                }
+            }
+        }
+
+        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            if (dataGridView1.Rows.Count != 0)
+            {
+                Read.Enabled = true;
+                Run_cont.Enabled = true;
+                Stop_cont.Enabled = true;
+            }
+            else
+            {
+                Read.Enabled = false;
+                Run_cont.Enabled = false;
+                Stop_cont.Enabled = false;
+            }
+        }
+
+        private void dataGridView1_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
+        {
+            if (Disconnect.Enabled == true)
+            {
+                if (e.StateChanged == DataGridViewElementStates.Selected)
+                {
+                    Write.Enabled = true;
+                }
+                else
+                {
+                    Write.Enabled = false;
+                }
+            }
+        }
+
+
+        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (Disconnect.Enabled == true)
+            {
+                dataGridView1.ClearSelection();
+                Write.Enabled = false;
+            }
 
         }
     }
